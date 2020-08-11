@@ -1,11 +1,9 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM python:3.7.3-slim
 
-# copy over our requirements.txt file
-COPY requirements.txt /tmp/
+COPY requirements.txt /
+RUN pip3 install -r /requirements.txt
 
-# upgrade pip and install required python packages
-RUN pip install -U pip
-RUN pip install -r /tmp/requirements.txt
-
-# copy over our app code
 COPY ./app /app
+WORKDIR /app
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]
